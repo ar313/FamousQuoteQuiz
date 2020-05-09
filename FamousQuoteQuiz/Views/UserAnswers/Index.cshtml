@@ -1,0 +1,69 @@
+﻿@model IEnumerable<FamousQuoteQuiz.ViewModel.UserAnswersViewModel>
+
+
+<h1>
+    User Answers
+</h1>
+
+    <form asp-action="Index" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Filter by Author name or User Email: <input class="col--medium" type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+                <input type="submit" value="Search" class="btn btn-info" />
+                <a class="btn btn-warning" asp-action="Index">Back to Full List</a>
+            </p>
+        </div>
+    </form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DescSort"]">
+                    @Html.DisplayNameFor(model => model.Description)
+                    </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSort"]">
+                    @Html.DisplayNameFor(model => model.Author)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSort"]">
+                    @Html.DisplayNameFor(model => model.Email)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AnswerSort"]">
+                    @Html.DisplayNameFor(model => model.Answer)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TimeSort"]">
+                    @Html.DisplayNameFor(model => model.AnswerTime)
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Answer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnswerTime)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

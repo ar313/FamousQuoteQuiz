@@ -1,0 +1,58 @@
+﻿@model IEnumerable<FamousQuoteQuiz.Models.Quote>
+
+@{
+    ViewData["Title"] = "Quotes";
+}
+
+<h1>Quotes</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New Quote</a>
+</p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by Author Name: <input class="col--medium" type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-info" />
+            <a class="btn btn-warning" asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DescSort"]">
+                    @Html.DisplayNameFor(model => model.Description)
+                </a>
+            </th>
+
+            <th> 
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]">
+                    @Html.DisplayNameFor(model => model.Author)
+                </a>
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
