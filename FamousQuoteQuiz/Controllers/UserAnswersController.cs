@@ -10,6 +10,7 @@ using FamousQuoteQuiz.Models;
 using FamousQuoteQuiz.Data.Repository;
 using FamousQuoteQuiz.Data.Interfaces;
 using FamousQuoteQuiz.ViewModel;
+using Microsoft.Data.SqlClient;
 
 namespace FamousQuoteQuiz.Controllers
 {
@@ -23,9 +24,16 @@ namespace FamousQuoteQuiz.Controllers
         }
 
         // GET: UserAnswers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             var UserAnswersVM = new List<UserAnswersViewModel>();
+
+            ViewData["AuthorSort"] = String.IsNullOrEmpty(sortOrder) ? "author" : "";
+            ViewData["EmailSort"] = sortOrder == "email" ? "email_desc" : "email";
+            ViewData["TimeSort"] = sortOrder == "time" ? "time_desc" : "time";
+            ViewData["DescSort"] = sortOrder == "desc" ? "desc_desc" : "desc";
+            ViewData["AnswerSort"] = sortOrder == "answer" ? "answer_desc" : "answer";
+            ViewData["CurrentFilter"] = searchString;
 
             List<UserAnswer> users = new List<UserAnswer>();
 
@@ -36,7 +44,15 @@ namespace FamousQuoteQuiz.Controllers
 
             if (users.Count() == 0) { return View(UserAnswersVM); }
 
-            foreach(var UserAnswer in users)
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(u => u.Quote.Author.Contains(searchString)
+                                        || u.User.Email.Contains(searchString)).ToList();
+            }
+
+            users = Sorting(sortOrder, users);
+
+            foreach (var UserAnswer in users)
             {
                 UserAnswersViewModel user = new UserAnswersViewModel
                 {
@@ -52,6 +68,47 @@ namespace FamousQuoteQuiz.Controllers
             }
 
             return View(UserAnswersVM);
+        }
+
+        private List<UserAnswer> Sorting(string sortOrder, List<UserAnswer> userAnswers)
+        {
+
+            switch (sortOrder)
+            {
+                case "author":
+                    userAnswers = userAnswers.OrderByDescending(u => u.Quote.Author).ToList();
+                    break;
+                case "email":
+                    userAnswers = userAnswers.OrderBy(u => u.User.Email).ToList();
+                    break;
+                case "email_desc":
+                    userAnswers = userAnswers.OrderByDescending(u => u.User.Email).ToList();
+                    break;
+                case "time":
+                    userAnswers = userAnswers.OrderBy(u => u.AnswerTime).ToList();
+                    break;
+                case "time_desc":
+                    userAnswers = userAnswers.OrderByDescending(u => u.AnswerTime).ToList();
+                    break;
+                case "desc":
+                    userAnswers = userAnswers.OrderBy(u => u.Quote.Description).ToList();
+                    break;
+                case "desc_desc":
+                    userAnswers = userAnswers.OrderByDescending(u => u.Quote.Description).ToList();
+                    break;
+                case "answer":
+                    userAnswers = userAnswers.OrderBy(u => u.Answer).ToList();
+                    break;
+                case "answer_desc":
+                    userAnswers = userAnswers.OrderByDescending(u => u.Answer).ToList();
+                    break;
+
+                default:
+                    userAnswers = userAnswers.OrderBy(u => u.Quote.Author).ToList();
+                    break;
+            }
+
+            return userAnswers;
         }
 
     }

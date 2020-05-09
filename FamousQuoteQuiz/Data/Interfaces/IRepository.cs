@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace FamousQuoteQuiz.Data.Interfaces
@@ -8,11 +9,11 @@ namespace FamousQuoteQuiz.Data.Interfaces
     public interface IRepository<T> where T : class
     {
 
-        IEnumerable<T> GetAll();
+        IAsyncEnumerable<T> GetAll();
 
-        IEnumerable<T> Find(Func<T, bool> predicate);
+        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
 
-        T GetById(Guid id);
+        Task<T> GetById(Guid id);
 
         void Create(T entity);
 

@@ -1,7 +1,10 @@
 ﻿using FamousQuoteQuiz.Data.Interfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace FamousQuoteQuiz.Data.Repository
@@ -34,19 +37,24 @@ namespace FamousQuoteQuiz.Data.Repository
             Save();
         }
 
-        public IEnumerable<T> Find(Func<T, bool> predicate)
+        public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
         {
-            return _context.Set<T>().Where(predicate);
+            return await _context.Set<T>().Where(predicate).ToListAsync();
         }
 
-        public IEnumerable<T> GetAll()
+        public async IAsyncEnumerable<T> GetAll()
         {
-            return _context.Set<T>();
+            var iterator = _context.Set<T>().ToListAsync();
+
+            foreach(var value in await iterator)
+            {
+                yield return value;
+            }
         }
 
-        public T GetById(Guid id)
+        public async Task<T> GetById(Guid id)
         {
-            return _context.Set<T>().Find(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public void Update(T entity)
