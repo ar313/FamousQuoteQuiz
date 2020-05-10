@@ -112,6 +112,11 @@ p.quote:before, p.quote:after
     clear: both; display:block; content: "";
 }
 
+.quiz 
+{
+    margin-bottom:30px;
+}
+
 .quiz .author
 {
     text-align: center;
