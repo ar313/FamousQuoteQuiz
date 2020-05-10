@@ -20,8 +20,13 @@ $(document).ready(function () {
     });
 
     $(".author-wrapper .btn").click(function (event) {
-        $(".author-wrapper").fadeOut("fast").addClass("hidden");
-        initialize();
+        $(".author-wrapper").addClass("hidden");
+        $(".quiz").fadeOut("slow").addClass("hidden");
+
+        setTimeout(function () {
+            initialize();
+        },600);
+        
     });
 
     function initialize() {
