@@ -16,13 +16,11 @@ $(document).ready(function () {
         } else {
             author = "None";
         }
-        console.log($(this).val());
         getAnswer(quoteID, author);
     });
 
     $(".author-wrapper .btn").click(function (event) {
         $(".author-wrapper").fadeOut("fast").addClass("hidden");
-        $(".answers-group").fadeIn("slow").removeClass("hidden");
         initialize();
     });
 
@@ -72,7 +70,6 @@ $(document).ready(function () {
 
     function setAuthor(author) {
         if (mode == 1) {
-            console.log(author.value);
             $(".binary > .author").text(author.value);
         } else if (mode == 2) {
             var authors = author.value;
@@ -82,7 +79,6 @@ $(document).ready(function () {
             });
         }
 
-        console.log(authors);
         $(".quiz").fadeIn("slow").removeClass("hidden");
     }
 
