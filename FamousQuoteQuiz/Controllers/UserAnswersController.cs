@@ -53,8 +53,6 @@ namespace FamousQuoteQuiz.Controllers
                 users.Add(answer);
             }
 
-            if (users.Count() == 0) { return View(UserAnswersVM); }
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = users.Where(u => u.Quote.Author.Contains(searchString)
