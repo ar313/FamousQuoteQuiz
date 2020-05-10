@@ -46,9 +46,8 @@ namespace FamousQuoteQuiz.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Author(int mode, string id)
+        public async Task<IActionResult> Author(int mode, Guid id)
         {
-            Guid gId = Guid.Parse(id);
 
             List<Quote> quotes = new List<Quote>();
 
@@ -59,15 +58,15 @@ namespace FamousQuoteQuiz.Controllers
 
             if (mode == 1)
             {
-                Quote response = quotes.OrderBy(r => Guid.NewGuid()).Take(1).First();
+                Quote response = quotes.OrderBy(r => Guid.NewGuid()).Take(2).First();
                 string author = response.Author;
                 
                 return Ok(Json(author));
             }
             else if (mode == 2)
             {
-                List<Quote> quote = new List<Quote>(quotes.Where(q => q.Id != gId).OrderBy(r => Guid.NewGuid()).Take(2));
-                Quote answer = await _quotesRepository.GetQuote(gId);
+                List<Quote> quote = new List<Quote>(quotes.Where(q => q.Id != id).OrderBy(r => Guid.NewGuid()).Take(2));
+                Quote answer = await _quotesRepository.GetQuote(id);
                 List<string> authors = new List<string>();
 
                 authors.Add(answer.Author);
@@ -78,15 +77,18 @@ namespace FamousQuoteQuiz.Controllers
             }
             else
             {
-                return NotFound();
+                Quote response = quotes.OrderBy(r => Guid.NewGuid()).Take(2).First();
+                string author = response.Author;
+
+                return Ok(Json(author));
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Answer(string id)
+        public async Task<IActionResult> Answer(Guid id)
         {
-            Guid gId = Guid.Parse(id);
-            Quote quoteOnPage = await _quotesRepository.GetQuote(gId);
+            //Guid gId = Guid.Parse(id);
+            Quote quoteOnPage = await _quotesRepository.GetQuote(id);
             
             string response = quoteOnPage.Author;
 
@@ -94,12 +96,16 @@ namespace FamousQuoteQuiz.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveAnswer(string id, string result)
+        public async Task<IActionResult> SaveAnswer(Guid id, string result)
         {
-            Guid gId = Guid.Parse(id);
+            
+            if(!User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
 
             User toAdd = await _userManager.GetUserAsync(User);
-            Quote quoteOnPage = await _quotesRepository.GetQuote(gId);
+            Quote quoteOnPage = await _quotesRepository.GetQuote(id);
             bool answer = result == "true" ? true : false;
             
             UserAnswer userAnswer = new UserAnswer { Id = Guid.NewGuid(), User = toAdd, Quote = quoteOnPage, Answer = answer, AnswerTime = DateTime.Now };
