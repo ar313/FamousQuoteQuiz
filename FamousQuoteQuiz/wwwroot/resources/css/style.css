@@ -134,7 +134,7 @@ p.quote:before, p.quote:after
 .btn-down {
     display:block;
     background-color: rgba(255,255,255,0) !important;
-    padding: 17px !important;
+    padding: 15px !important;
     border-width: 1px;
     border-color: rgba(0,0,0,0);
     width: 78px;
