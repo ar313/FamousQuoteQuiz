@@ -56,14 +56,7 @@ namespace FamousQuoteQuiz.Controllers
                 quotes.Add(quote);
             }
 
-            if (mode == 1)
-            {
-                Quote response = quotes.OrderBy(r => Guid.NewGuid()).Take(2).First();
-                string author = response.Author;
-                
-                return Ok(Json(author));
-            }
-            else if (mode == 2)
+            if (mode == 2)
             {
                 List<Quote> quote = new List<Quote>(quotes.Where(q => q.Id != id).OrderBy(r => Guid.NewGuid()).Take(2));
                 Quote answer = await _quotesRepository.GetQuote(id);

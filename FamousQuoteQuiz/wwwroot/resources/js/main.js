@@ -1,7 +1,7 @@
 ﻿
 $(document).ready(function () {
 
-    var mode = localStorage.getItem("mode") == null ? localStorage.setItem("mode", 1) : localStorage.getItem("mode");
+    var mode = localStorage.getItem("mode") == null ? localStorage.setItem("mode", 1): localStorage.getItem("mode");
     var quoteID;
 
     initialize();
@@ -25,6 +25,8 @@ $(document).ready(function () {
     });
 
     function initialize() {
+        mode = localStorage.getItem("mode");
+
         switchMode();
         getQuote();
     }
