@@ -14,17 +14,10 @@ namespace FamousQuoteQuiz.Controllers
 {
     public class MainController : Controller
     {
-        private readonly QuizDbContext _context;
-        private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
 
-
-        public MainController(QuizDbContext context, UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public MainController()
         {
-            _context = context;
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+
         }
 
         public IActionResult Index()
