@@ -15,11 +15,6 @@ namespace FamousQuoteQuiz.Data.Repository
 
         }
 
-        public Quote GetAuthor(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Quote> GetQuote(Guid id)
         {
             return await _context.Quote.SingleOrDefaultAsync(q => q.Id == id);

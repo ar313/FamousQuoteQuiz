@@ -5,6 +5,10 @@
     {
         max-width: 90%;
     }
+
+    table .btn + .btn {
+        margin-left: 0 !important;
+    }
 }
 
 @media only screen and (min-width: 768px) 
@@ -31,6 +35,11 @@ body {
     max-width:90%;
     margin: 0 auto;
 }
+
+.wrapper .btn + .btn {
+    margin-left: 10px;
+}
+
 
 .title
 {
@@ -78,9 +87,9 @@ p.quote:before, p.quote:after
     padding-left:5px;
 }
 
-.multiple > .btn + .btn 
-{
-    margin-top:10px;
+
+.wrapper .multiple > .btn + .btn {
+    margin: 10px auto;
 }
 
 .btn-gray
@@ -148,7 +157,29 @@ p.quote:before, p.quote:after
     margin:10px;
 }
 
-.wrapper .btn + .btn
+
+
+.no-float{
+    float:none !important;
+}
+
+.settings__wrapper {
+    list-style: none;
+    padding:20px 0 20px;
+}
+
+.settings__wrapper .btn 
 {
-    margin-left:10px;
+    margin-bottom: 10px;
+    width: 200px;
+    cursor: pointer;
+}
+
+.settings__wrapper label
+{
+    cursor: pointer
+}
+
+td:first-child {
+    max-width: 70%;
 }

@@ -4,11 +4,11 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>Login</h1>
+<h1 class="col-md-4 col-md-offset-4 no-float">Login</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 col-md-offset-4">
         <form asp-action="Login" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -34,8 +34,4 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-controller="Main" asp-action="Index">Back</a>
 </div>

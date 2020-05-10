@@ -13,15 +13,27 @@
 
         <ul class="settings__wrapper">
             <li>
-                <input type="radio" id="binary" name="binary" value="Binary Quiz" />
-                <label for="binary">Yes and No Choice Quiz</label>
+                <input class="hidden" type="radio" id="binary" name="binary" value="Binary Quiz" />
+                
+                <label for="binary">
+                    <a class="btn btn-info">
+                        Yes and No Choice Quiz
+                    </a>
+                </label>
             </li>
 
             <li>
-                <input type="radio" id="multiple" name="multiple" value="Multiple Choice Quiz" />
-                <label for="multiple">Multiple Choice Quiz</label>
+                <input class="hidden" type="radio" id="multiple" name="multiple" value="Multiple Choice Quiz" />
+                
+                <label for="multiple">
+                    <a class="btn btn-info">
+                        Multiple Choice Quiz
+                    </a>
+                </label>
             </li>
         </ul>
+
+        <p class="changes-text"></p>
     </div>
 
 <script src="~/resources/js/settings.js" type="text/javascript"></script>

@@ -11,7 +11,5 @@ namespace FamousQuoteQuiz.Data.Interfaces
         IAsyncEnumerable<Quote>  GetQuotes();
 
         Task<Quote> GetQuote(Guid id);
-
-        Quote GetAuthor(Guid id);
     }
 }

@@ -1,69 +1,90 @@
-﻿@model IEnumerable<FamousQuoteQuiz.ViewModel.UserAnswersViewModel>
+﻿@model FamousQuoteQuiz.Data.PaginatedList<FamousQuoteQuiz.ViewModel.UserAnswersViewModel>
 
 
 <h1>
     User Answers
 </h1>
 
-    <form asp-action="Index" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Filter by Author name or User Email: <input class="col--medium" type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-                <input type="submit" value="Search" class="btn btn-info" />
-                <a class="btn btn-warning" asp-action="Index">Back to Full List</a>
-            </p>
-        </div>
-    </form>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Filter by Author name or User Email: <input class="col--medium" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-info" />
+            <a class="btn btn-warning" asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DescSort"]">
-                    @Html.DisplayNameFor(model => model.Description)
-                    </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSort"]">
-                    @Html.DisplayNameFor(model => model.Author)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DescSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Description
                 </a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSort"]">
-                    @Html.DisplayNameFor(model => model.Email)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Author
                 </a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["AnswerSort"]">
-                    @Html.DisplayNameFor(model => model.Answer)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    .Email
                 </a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["TimeSort"]">
-                    @Html.DisplayNameFor(model => model.AnswerTime)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AnswerSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Answer
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TimeSort"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                   AnswerTime
                 </a>
             </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Answer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnswerTime)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Answer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AnswerTime)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

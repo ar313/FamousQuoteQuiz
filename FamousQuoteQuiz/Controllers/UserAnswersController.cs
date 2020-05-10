@@ -24,15 +24,26 @@ namespace FamousQuoteQuiz.Controllers
         }
 
         // GET: UserAnswers
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string currentFilter, string sortOrder, string searchString, int? pageNumber)
         {
             var UserAnswersVM = new List<UserAnswersViewModel>();
 
+            ViewData["CurrentSort"] = sortOrder;
             ViewData["AuthorSort"] = String.IsNullOrEmpty(sortOrder) ? "author" : "";
             ViewData["EmailSort"] = sortOrder == "email" ? "email_desc" : "email";
             ViewData["TimeSort"] = sortOrder == "time" ? "time_desc" : "time";
             ViewData["DescSort"] = sortOrder == "desc" ? "desc_desc" : "desc";
             ViewData["AnswerSort"] = sortOrder == "answer" ? "answer_desc" : "answer";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
             ViewData["CurrentFilter"] = searchString;
 
             List<UserAnswer> users = new List<UserAnswer>();
@@ -67,7 +78,9 @@ namespace FamousQuoteQuiz.Controllers
                 UserAnswersVM.Add(user);
             }
 
-            return View(UserAnswersVM);
+            int pageSize = 10;
+
+            return View(PaginatedList<UserAnswersViewModel>.Create(UserAnswersVM, pageNumber ?? 1, pageSize));
         }
 
         private List<UserAnswer> Sorting(string sortOrder, List<UserAnswer> userAnswers)

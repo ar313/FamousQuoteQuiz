@@ -9,46 +9,47 @@
             Who said it?
         </h2>
 
-        <form asp-controller="Account" asp-action="Login" method="POST">
-            <div class="question-group">
-                <div class="question">
-                    <p class="quote">
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <p class="text-danger">You need to be logged in to save the answer</p>
+        }
 
-                    </p>
-                </div>
+        <div class="question-group">
+            <div class="question">
+                <p class="quote">
+                </p>
             </div>
+        </div>
 
-            <div class="author-wrapper hidden">
-                <h4 class="quote-author author">
+        <div class="author-wrapper hidden">
+            <h4 class="quote-author author">
+            </h4>
+            <input class="btn btn-info btn-lg" type="button" value="Next" />
+        </div>
 
+        <div class="answers-group">
+            <div class="binary hidden">
+
+                <h4 class="author">
                 </h4>
-                <input class="btn btn-info btn-lg" type="button" value="Next" />
-            </div>
 
-            <div class="answers-group">
-                <div class="binary hidden">
-
-                    <h4 class="author">
-                    </h4>
-
-                    <div class="btn-wrapper">
-                        <input class="btn btn-lg btn-float--left btn-success" type="button" value="Yes" />
-                        <input class="btn btn-lg btn-float--right btn-danger" type="button" value="No" />
-                    </div>
-                </div>
-
-                <div class="multiple hidden">
-                    <input class="btn btn-gray btn-lg" type="button" value="" />
-
-                    <input class="btn btn-gray btn-lg" type="button" value="" />
-
-                    <input class="btn btn-gray btn-lg" type="button" value="" />
+                <div class="btn-wrapper">
+                    <input class="btn btn-lg btn-float--left btn-success" type="button" value="Yes" />
+                    <input class="btn btn-lg btn-float--right btn-danger" type="button" value="No" />
                 </div>
             </div>
 
-            <div class="question-answer">
+            <div class="multiple hidden">
+                <input class="btn btn-gray btn-lg" type="button" value="" />
+
+                <input class="btn btn-gray btn-lg" type="button" value="" />
+
+                <input class="btn btn-gray btn-lg" type="button" value="" />
             </div>
-        </form>
+        </div>
+
+        <div class="question-answer">
+        </div>
     </div>
 </div>
 

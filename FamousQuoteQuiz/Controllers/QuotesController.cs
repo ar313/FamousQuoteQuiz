@@ -20,11 +20,22 @@ namespace FamousQuoteQuiz.Controllers
             _quotesRepository = quotesRepository;
         }
 
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string CurrentFilter,string sortOrder, string searchString, int? pageNumber)
         {
+             ViewData["CurrentSort"] = sortOrder;
              ViewData["NameSort"] = String.IsNullOrEmpty(sortOrder) ? "author" : "";
              ViewData["DescSort"] = sortOrder == "desc_descending" ? "desc" : "desc_descending";
-             ViewData["CurrentFilter"] = searchString;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = CurrentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
 
             List<Quote> quotes = new List<Quote>();
 
@@ -54,17 +65,19 @@ namespace FamousQuoteQuiz.Controllers
                         break;
                 }
 
-                return View(quotes.ToList());
+            int pageSize = 10;
+
+            return View(PaginatedList<Quote>.Create(quotes, pageNumber ?? 1, pageSize));
         }
 
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var quote = _quotesRepository.GetQuote(id);
+            var quote = await _quotesRepository.GetQuote(id);
             
             if (quote == null)
             {
@@ -81,7 +94,7 @@ namespace FamousQuoteQuiz.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Description,Author")] Quote quote)
+        public async Task<IActionResult> Create([Bind("Id,Description,Author")] Quote quote)
         {
             if (ModelState.IsValid)
             {
@@ -93,14 +106,14 @@ namespace FamousQuoteQuiz.Controllers
             return View(quote);
         }
 
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var quote = _quotesRepository.GetQuote(id);
+            var quote = await _quotesRepository.GetQuote(id);
 
             if (quote == null)
             {
@@ -141,14 +154,14 @@ namespace FamousQuoteQuiz.Controllers
             return View(quote);
         }
 
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var quote = _quotesRepository.GetQuote(id);
+            var quote = await _quotesRepository.GetQuote(id);
 
             if (quote == null)
             {

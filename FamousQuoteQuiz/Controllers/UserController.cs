@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FamousQuoteQuiz.Data;
 using FamousQuoteQuiz.Data.Interfaces;
 using FamousQuoteQuiz.Models;
 using FamousQuoteQuiz.ViewModel;
@@ -19,11 +20,22 @@ namespace FamousQuoteQuiz.Controllers
             _userRepository = userRepository;
         }
 
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string currentFilter, string sortOrder, string searchString, int? pageNumber)
         {
+            ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSort"] = String.IsNullOrEmpty(sortOrder) ? "name" : "";
             ViewData["EmailSort"] = sortOrder == "email_desc" ? "email" : "email_desc";
             ViewData["DateSort"] = sortOrder == "date_desc" ? "date" : "date_desc";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
             ViewData["CurrentFilter"] = searchString;
 
             var UsersVM = new List<UserViewModel>();
@@ -46,7 +58,6 @@ namespace FamousQuoteQuiz.Controllers
                 UsersVM = UsersVM.Where(u => u.Name.Contains(searchString) 
                                         || u.Email.Contains(searchString)).ToList();
             }
-            
 
             switch (sortOrder)
             {
@@ -70,8 +81,9 @@ namespace FamousQuoteQuiz.Controllers
                     break;
             }
 
+            int pageSize = 10;
 
-            return View(UsersVM);
+            return View(PaginatedList<UserViewModel>.Create(UsersVM, pageNumber ?? 1, pageSize));
         }
 
         public async Task<IActionResult> Details(string id)
