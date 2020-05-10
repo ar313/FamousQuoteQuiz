@@ -8,6 +8,7 @@ using FamousQuoteQuiz.Models;
 using FamousQuoteQuiz.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FamousQuoteQuiz.Controllers
 {
@@ -44,12 +45,15 @@ namespace FamousQuoteQuiz.Controllers
 
             await foreach(var User in _userRepository.GetUsers())
             {
+                var isDisabled =  User.LockoutEnd > DateTime.Now ? true : false;
+
                 UsersVM.Add(new UserViewModel
                 {
                     Id = User.Id,
                     Email = User.Email,
                     Name = User.Name,
                     JoinedDate = User.JoinedDate,
+                    isDisabled = isDisabled
                 });
             }
 
@@ -85,30 +89,77 @@ namespace FamousQuoteQuiz.Controllers
 
             return View(PaginatedList<UserViewModel>.Create(UsersVM, pageNumber ?? 1, pageSize));
         }
-
-        public async Task<IActionResult> Details(string id)
+        
+        [HttpPost, ActionName("Disable")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Disable(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var u =  await _userRepository.GetUser(id); 
+            User u = await _userRepository.GetUser(id);
 
             if (u == null)
             {
                 return NotFound();
             }
 
-            UserViewModel user = new UserViewModel
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Email = u.Email,
-                JoinedDate = u.JoinedDate,
-            };
+            u.LockoutEnabled = true;
+            u.LockoutEnd = new DateTime(2999, 01, 01);
 
-            return View(user);
+            try
+            {
+                _userRepository.Update(u);
+            }
+
+            catch (DbUpdateConcurrencyException)
+            {
+                var result = await UserExists(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost, ActionName("Enable")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Enable(string id)
+        {
+
+            User u = await _userRepository.GetUser(id);
+
+            if (u == null)
+            {
+                return NotFound();
+            }
+
+            u.LockoutEnabled = true;
+            u.LockoutEnd = DateTime.Now;
+
+            try
+            {
+                _userRepository.Update(u);
+            }
+
+            catch (DbUpdateConcurrencyException)
+            {
+                var result = await UserExists(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(string id)
@@ -154,6 +205,14 @@ namespace FamousQuoteQuiz.Controllers
                     u.Email = user.Email;
                     u.Name = user.Name;
                     u.JoinedDate = user.JoinedDate;
+                    
+                    var users = await _userRepository.Find(t => t.Email == u.Email);
+                    users = users.ToList();
+                    
+                    if (users.Count()>=1 || user.Email != u.Email)
+                    {
+                        return NotFound();
+                    }
                     _userRepository.Update(u);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -172,6 +231,35 @@ namespace FamousQuoteQuiz.Controllers
             }
             return View(user);
         }
+
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userRepository.GetUser(id);
+
+            if (user== null)
+            {
+                return NotFound();
+            }
+
+            var isDisabled = user.LockoutEnd > DateTime.Now ? true : false;
+
+            UserViewModel u = new UserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                JoinedDate = user.JoinedDate,
+                isDisabled = isDisabled
+            };
+
+            return View(u);
+        }
+
 
         public async Task<IActionResult> Delete(string id)
         {

@@ -31,6 +31,21 @@
     </dl>
 </div>
 <div>
-    <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    @if (!@Model.isDisabled)
+    {
+        <form asp-action="Disable">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Disable" class="btn btn-primary" />
+        </form>
+    }
+
+    @if (@Model.isDisabled)
+    {
+        <form asp-action="Enable">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Enable" class="btn btn-primary" />
+        </form>
+    }
+    <p> </p>
     <a class="btn btn-warning" asp-action="Index">Back to List</a>
 </div>

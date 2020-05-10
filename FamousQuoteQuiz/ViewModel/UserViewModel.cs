@@ -24,5 +24,8 @@ namespace FamousQuoteQuiz.ViewModel
         [Display(Name="Joined Date")]
         public DateTime JoinedDate { get; set; }
 
+        public bool isDisabled { get; set; }
+
+
     }
 }
