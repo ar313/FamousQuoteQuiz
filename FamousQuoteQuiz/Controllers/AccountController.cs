@@ -24,12 +24,18 @@ namespace FamousQuoteQuiz.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("index", "main");
+            }
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = model.Email, Email = model.Email, Name = model.Name, JoinedDate = DateTime.Now };
@@ -51,15 +57,20 @@ namespace FamousQuoteQuiz.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(string id)
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("login", "account");
+            return RedirectToAction("index", "main");
         }
 
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("index", "main");
+            }
+
             return View();
         }
 
