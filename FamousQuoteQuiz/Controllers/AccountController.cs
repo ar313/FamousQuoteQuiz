@@ -77,11 +77,19 @@ namespace FamousQuoteQuiz.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Email);
-            var isLockedOut =  await userManager.IsLockedOutAsync(user);
+            
 
-            if (ModelState.IsValid && !isLockedOut)
+            if (ModelState.IsValid)
             {
+                var user = await userManager.FindByNameAsync(model.Email);
+                var isLockedOut = await userManager.IsLockedOutAsync(user);
+
+                if (isLockedOut)
+                {
+                    ModelState.AddModelError("", "Account Disabled");
+                    return View(model);
+                }
+
                 var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.Remember, false);
 
                 if (result.Succeeded)
@@ -92,10 +100,7 @@ namespace FamousQuoteQuiz.Controllers
                 ModelState.AddModelError("", "Wrong username or password");
             }
 
-            if(isLockedOut)
-            {
-                ModelState.AddModelError("", "Account Disabled");
-            }
+          
 
             return View(model);
         }
