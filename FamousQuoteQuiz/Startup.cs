@@ -53,6 +53,10 @@ namespace FamousQuoteQuiz
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
